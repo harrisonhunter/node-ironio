@@ -1,34 +1,29 @@
 {
-  "name": "node-ironio",
-  "version": "0.4.2",
+  "name": "node-ironio-2",
+  "version": "0.4.2.1",
   "description": "iron.io client",
   "main": "index.js",
-  "author": "Andrew Hallock <andrew@blazelocal.com>",
-  "keywords": [
-    "ironio",
-    "ironmq",
-    "ironcache",
-    "ironworker"
-  ],
+  "author": "Harrison Hunter <harrison@maestroqa.com>",
+  "keywords": ["ironio", "ironmq", "ironcache", "ironworker"],
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test/*-test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ahallock/node-ironio.git"
+    "url": "git://github.com/harrisonhunter/node-ironio.git"
   },
   "bugs": {
-    "url": "http://github.com/ahallock/node-ironio/issues"
+    "url": "http://github.com/harrisonhunter/node-ironio/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://github.com/ahallock/node-ironio/raw/master/LICENSE"
+      "url": "http://github.com/harrisonhunter/node-ironio/raw/master/LICENSE"
     }
   ],
   "readmeFilename": "README.md",
   "dependencies": {
-    "request": "2.47.0"
+    "request": "2.88.0"
   },
   "devDependencies": {
     "should": "~1.2.1",
