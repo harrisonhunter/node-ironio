@@ -1,7 +1,7 @@
 {
   "name": "node-ironio-2",
-  "version": "0.4.2.1",
-  "description": "iron.io client",
+  "version": "0.4.3",
+  "description": "iron.io client fork",
   "main": "index.js",
   "author": "Harrison Hunter <harrison@maestroqa.com>",
   "keywords": ["ironio", "ironmq", "ironcache", "ironworker"],
