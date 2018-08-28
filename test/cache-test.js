@@ -1,64 +1,62 @@
-var should = require('should')
-  , nock = require('nock')
-  ;
+var should = require('should'),
+  nock = require('nock');
 
-var ironio = require('../')('oauth2 token')
-  , project = ironio.projects('000000000000000000000000')
-  , host = 'https://cache-aws-us-east-1.iron.io'
-  ;
+var ironio = require('../')('oauth2 token'),
+  project = ironio.projects('000000000000000000000000'),
+  host = 'https://cache-aws-us-east-1.iron.io';
 
 describe('Cache', function() {
   before(function(done) {
     var projectPath = '/1/projects/000000000000000000000000';
     nock(host)
-    .get(projectPath + '/caches')
-    .reply(200, [
-      {
-        "project_id": "PROJECT ID",
-        "name": "CACHE NAME"
-      },
-      {
-        "project_id": "PROJECT ID",
-        "name": "CACHE NAME"
-      }
-    ])
-    .get(projectPath + '/caches/mycache')
-    .reply(200, {
-      "size": 1
-    })
-    .delete(projectPath + '/caches/mycache')
-    .reply(200, {
-      "msg": "Deleted"
-    })
-    .post(projectPath + '/caches/mycache/clear')
-    .reply(200, {
-      "msg": "Cleared."
-    })
-    .put(projectPath + '/caches/mycache/items/key', {
-      value: 'value'
-    })
-    .reply(200, {
-      'msg': 'Stored.'
-    })
-    .post(projectPath + '/caches/mycache/items/key/increment', {
-      amount: 1,
-    })
-    .reply(200, {
-      "msg": "Added",
-      "value": 11
-    })
-    .get(projectPath + '/caches/mycache/items/key')
-    .reply(200, {
-      "cache": "CACHE NAME",
-      "key": "ITEM KEY",
-      "value": "ITEM VALUE"
-    })
-    .get(projectPath + '/caches/mycache/items/key2')
-    .reply(404, {"msg":"Key not found."})
-    .delete(projectPath + '/caches/mycache/items/key')
-    .reply(200, {
-      "msg": "Deleted."
-    });
+      .get(projectPath + '/caches')
+      .reply(200, [
+        {
+          project_id: 'PROJECT ID',
+          name: 'CACHE NAME',
+        },
+        {
+          project_id: 'PROJECT ID',
+          name: 'CACHE NAME',
+        },
+      ])
+      .get(projectPath + '/caches/mycache')
+      .reply(200, {
+        size: 1,
+      })
+      .delete(projectPath + '/caches/mycache')
+      .reply(200, {
+        msg: 'Deleted',
+      })
+      .post(projectPath + '/caches/mycache/clear')
+      .reply(200, {
+        msg: 'Cleared.',
+      })
+      .put(projectPath + '/caches/mycache/items/key', {
+        value: 'value',
+      })
+      .reply(200, {
+        msg: 'Stored.',
+      })
+      .post(projectPath + '/caches/mycache/items/key/increment', {
+        amount: 1,
+      })
+      .reply(200, {
+        msg: 'Added',
+        value: 11,
+      })
+      .get(projectPath + '/caches/mycache/items/key')
+      .reply(200, {
+        cache: 'CACHE NAME',
+        key: 'ITEM KEY',
+        value: 'ITEM VALUE',
+      })
+      .get(projectPath + '/caches/mycache/items/key2')
+      .reply(404, { msg: 'Key not found.' })
+      .delete(projectPath + '/caches/mycache/items/key')
+      .reply(200, {
+        msg: 'Deleted.',
+      });
     done();
   });
   describe('#list()', function() {
@@ -94,7 +92,7 @@ describe('Cache', function() {
     it('should clear cache', function(done) {
       project.caches('mycache').clear(function(err, res) {
         should.not.exist(err);
-        res.msg.should.equal('Cleared.');;
+        res.msg.should.equal('Cleared.');
         done();
       });
     });

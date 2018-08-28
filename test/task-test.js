@@ -1,137 +1,146 @@
-var nock = require('nock')
-  , should = require('should')
-  ;
+var nock = require('nock'),
+  should = require('should');
 
-var ironio = require('../')('oauth2 token')
-  , project = ironio.projects('000000000000000000000000')
-  , host = 'https://worker-aws-us-east-1.iron.io'
-  ;
+var ironio = require('../')('oauth2 token'),
+  project = ironio.projects('000000000000000000000000'),
+  host = 'https://worker-aws-us-east-1.iron.io';
 
 describe('Task', function() {
   before(function(done) {
     var projectPath = '/2/projects/000000000000000000000000';
     nock(host)
-    .get(projectPath + '/tasks')
-    .reply(200, {
-      "tasks": [
-        {
-            "id": "4f3595381cf75447be029da5",
-            "percent": 100
-        }
-      ]
-    })
-    .get(projectPath + '/schedules')
-    .reply(200, {
-      "schedules": [
-        {
-          "id": "4eb1b490cddb136065000011",
-          "code_name": "MyWorker",
-          "run_times": 1,
-          "run_count": 1
-        }
-      ]
-    })
-    .post(projectPath + '/tasks', {tasks: [{
-                                            code_name: 'code name',
-                                            payload: 'payload',
-                                            priority: 0,
-                                            delay: 0,
-                                            label: 'test label',
-                                            cluster: 'default'
-                                          }]
-    })
-    .reply(200, {
-      "msg": "Queued up",
-      "tasks": [
-        {
-            "id": "4eb1b471cddb136065000010"
-        }
-      ]
-    })
-    .post(projectPath + '/tasks', {tasks: [{ code_name: 'code name', payload: 'payload' }]})
-    .reply(200, {
-      "msg": "Queued up",
-      "tasks": [
-        {
-            "id": "4eb1b471cddb136065000010"
-        }
-      ]
-    })
-    .post(projectPath + '/schedules', {
-      schedules: [{
-      payload : "payload",
-      name: "MyScheduledTask",
-      code_name: "MyWorker",
-      run_every: 3600
-    }]})
-    .reply(200, {
-      "msg": "Scheduled",
-      "schedules": [
-        {
-            "id": "4eb1b490cddb136065000011"
-        }
-      ]
-    })
-    .post(projectPath + '/schedules', {
-      schedules: [{
-      payload : "payload",
-      name: "MyScheduledTask",
-      code_name: "MyWorker",
-      run_every: 3600
-    }]})
-    .reply(200, {
-      "msg": "Scheduled",
-      "schedules": [
-        {
-            "id": "4eb1b490cddb136065000011"
-        }
-      ]
-    })
-    .post(projectPath + '/tasks/webhook?code_name=code_name', {})
-    .reply(200,{
-      "id": "4f3595381cf75447be029da5",
-      "msg":"Queued up."
-    })
-    .get(projectPath + '/tasks/1')
-    .reply(200, {
-      "id": "4eb1b471cddb136065000010",
-      "status": "complete",
-      "code_name": "MyWorker"
-    })
-    .get(projectPath + '/tasks/1/log')
-    .reply(200, 'log')
-    .post(projectPath + '/tasks/1/cancel')
-    .reply(200, {
-      "msg": "Cancelled"
-    })
-    .post(projectPath + '/tasks/1/progress', {
-      "percent": 25,
-      "msg": "msg"
-    })
-    .reply(200, {
-      "msg": "Progress set"
-    })
-    .post(projectPath + '/tasks/1/retry', {
-      "delay": 0
-    })
-    .reply(200, {
-      "msg": "Queued up",
-      "tasks": [
-        {
-          "id": "4eb1b471cddb136065000010"
-        }
-      ]
-    })
-    .get(projectPath + '/schedules/1')
-    .reply(200, {
-      "id": "4eb1b490cddb136065000011",
-      "msg": "Ran max times.",
-      "status": "complete"
-    })
-    .post(projectPath + '/schedules/1/cancel')
-    .reply(200, {
-      "msg": "Cancelled"
-    });
+      .get(projectPath + '/tasks')
+      .reply(200, {
+        tasks: [
+          {
+            id: '4f3595381cf75447be029da5',
+            percent: 100,
+          },
+        ],
+      })
+      .get(projectPath + '/schedules')
+      .reply(200, {
+        schedules: [
+          {
+            id: '4eb1b490cddb136065000011',
+            code_name: 'MyWorker',
+            run_times: 1,
+            run_count: 1,
+          },
+        ],
+      })
+      .post(projectPath + '/tasks', {
+        tasks: [
+          {
+            code_name: 'code name',
+            payload: 'payload',
+            priority: 0,
+            delay: 0,
+            label: 'test label',
+            cluster: 'default',
+          },
+        ],
+      })
+      .reply(200, {
+        msg: 'Queued up',
+        tasks: [
+          {
+            id: '4eb1b471cddb136065000010',
+          },
+        ],
+      })
+      .post(projectPath + '/tasks', {
+        tasks: [{ code_name: 'code name', payload: 'payload' }],
+      })
+      .reply(200, {
+        msg: 'Queued up',
+        tasks: [
+          {
+            id: '4eb1b471cddb136065000010',
+          },
+        ],
+      })
+      .post(projectPath + '/schedules', {
+        schedules: [
+          {
+            payload: 'payload',
+            name: 'MyScheduledTask',
+            code_name: 'MyWorker',
+            run_every: 3600,
+          },
+        ],
+      })
+      .reply(200, {
+        msg: 'Scheduled',
+        schedules: [
+          {
+            id: '4eb1b490cddb136065000011',
+          },
+        ],
+      })
+      .post(projectPath + '/schedules', {
+        schedules: [
+          {
+            payload: 'payload',
+            name: 'MyScheduledTask',
+            code_name: 'MyWorker',
+            run_every: 3600,
+          },
+        ],
+      })
+      .reply(200, {
+        msg: 'Scheduled',
+        schedules: [
+          {
+            id: '4eb1b490cddb136065000011',
+          },
+        ],
+      })
+      .post(projectPath + '/tasks/webhook?code_name=code_name', {})
+      .reply(200, {
+        id: '4f3595381cf75447be029da5',
+        msg: 'Queued up.',
+      })
+      .get(projectPath + '/tasks/1')
+      .reply(200, {
+        id: '4eb1b471cddb136065000010',
+        status: 'complete',
+        code_name: 'MyWorker',
+      })
+      .get(projectPath + '/tasks/1/log')
+      .reply(200, 'log')
+      .post(projectPath + '/tasks/1/cancel')
+      .reply(200, {
+        msg: 'Cancelled',
+      })
+      .post(projectPath + '/tasks/1/progress', {
+        percent: 25,
+        msg: 'msg',
+      })
+      .reply(200, {
+        msg: 'Progress set',
+      })
+      .post(projectPath + '/tasks/1/retry', {
+        delay: 0,
+      })
+      .reply(200, {
+        msg: 'Queued up',
+        tasks: [
+          {
+            id: '4eb1b471cddb136065000010',
+          },
+        ],
+      })
+      .get(projectPath + '/schedules/1')
+      .reply(200, {
+        id: '4eb1b490cddb136065000011',
+        msg: 'Ran max times.',
+        status: 'complete',
+      })
+      .post(projectPath + '/schedules/1/cancel')
+      .reply(200, {
+        msg: 'Cancelled',
+      });
     done();
   });
   after(function(done) {
@@ -170,7 +179,7 @@ describe('Task', function() {
         priority: 0,
         delay: 0,
         label: 'test label',
-        cluster: 'default'
+        cluster: 'default',
       };
       project.tasks.queue(body, function(err, res) {
         should.not.exist(err);
@@ -194,10 +203,10 @@ describe('Task', function() {
   describe('#schedule()', function() {
     it('should schedule a task', function(done) {
       var body = {
-        payload : "payload",
-        name: "MyScheduledTask",
-        code_name: "MyWorker",
-        run_every: 3600
+        payload: 'payload',
+        name: 'MyScheduledTask',
+        code_name: 'MyWorker',
+        run_every: 3600,
       };
       project.tasks.schedule(body, function(err, res) {
         should.not.exist(err);
@@ -208,12 +217,14 @@ describe('Task', function() {
       });
     });
     it('should schedule an array of tasks', function(done) {
-      var body = [{
-        payload : "payload",
-        name: "MyScheduledTask",
-        code_name: "MyWorker",
-        run_every: 3600
-      }];
+      var body = [
+        {
+          payload: 'payload',
+          name: 'MyScheduledTask',
+          code_name: 'MyWorker',
+          run_every: 3600,
+        },
+      ];
       project.tasks.schedule(body, function(err, res) {
         should.not.exist(err);
         res.msg.should.equal('Scheduled');
@@ -263,7 +274,7 @@ describe('Task', function() {
     });
   });
   describe('#progress()', function() {
-    it('should update the task\'s progress', function(done) {
+    it("should update the task's progress", function(done) {
       project.tasks.progress('1', 25, 'msg', function(err, res) {
         should.not.exist(err);
         res.msg.should.equal('Progress set');
@@ -303,4 +314,3 @@ describe('Task', function() {
     });
   });
 });
-

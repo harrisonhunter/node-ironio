@@ -1,12 +1,11 @@
 /*!
  * Module dependencies.
  */
-var Cache = require('./lib/cache')
-  , Queue = require('./lib/queue')
-  , task = require('./lib/task')
-  , CodePackage = require('./lib/code-package')
-  , querystring = require('querystring')
-  ;
+var Cache = require('./lib/cache'),
+  Queue = require('./lib/queue'),
+  task = require('./lib/task'),
+  CodePackage = require('./lib/code-package'),
+  querystring = require('querystring');
 
 /**
  * Returns the projects function.
@@ -21,7 +20,7 @@ function ironio(token, options) {
   var path = 'projects';
 
   function projects(id) {
-    var projectPath = path + '/' +  id;
+    var projectPath = path + '/' + id;
 
     function createListFn(name) {
       return function(params, fn) {
@@ -30,7 +29,10 @@ function ironio(token, options) {
           params = null;
         }
 
-        var servicePath = projectPath + '/' + name +
+        var servicePath =
+          projectPath +
+          '/' +
+          name +
           (params ? '?' + querystring.stringify(params) : '');
 
         api.get(servicePath, fn);
@@ -51,15 +53,15 @@ function ironio(token, options) {
     tasks.scheduled.list = createListFn('schedules');
 
     return {
-        caches: createService(Cache, 'caches')
-      , queues: createService(Queue, 'queues')
-      , codePackages: createService(CodePackage, 'codes')
-      , tasks: tasks
+      caches: createService(Cache, 'caches'),
+      queues: createService(Queue, 'queues'),
+      codePackages: createService(CodePackage, 'codes'),
+      tasks: tasks,
     };
   }
 
   return {
-    projects: projects
+    projects: projects,
   };
 }
 
