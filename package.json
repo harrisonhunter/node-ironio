@@ -28,6 +28,6 @@
   "devDependencies": {
     "should": "~1.2.1",
     "nock": "~0.22.1",
-    "mocha": "~1.7.4"
+    "mocha": "~8.4.0"
   }
 }
